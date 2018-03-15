@@ -60,6 +60,7 @@ export class LandingPageComponent implements OnInit {
 
   googleLogin() {
     var url = location.origin + '/google/oauth2/?device=browser';
+    console.log(url);
     location.href = url;
   }
 
