@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { UserDataComponent } from './components/user-data/user-data.component';
 import { FoodComponent } from './components/food/food.component';
 
+import { BreatheService } from './services/breathe/breathe.service';
 import { UserService } from './services/user.service';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { MainComponent } from './components/main/main.component';
@@ -43,7 +44,7 @@ const appRoutes: Routes = [
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [UserService],
+  providers: [UserService, BreatheService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

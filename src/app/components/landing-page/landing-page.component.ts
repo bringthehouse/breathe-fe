@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ViewEncapsulation } from '@angular/core';
+import { BreatheService } from '../../services/breathe/breathe.service';
 
 
 const api_url:string = "http://localhost:8000/";
@@ -23,19 +24,22 @@ export class LandingPageComponent implements OnInit {
   });
 
 
-  constructor(private http:HttpClient, private router:Router, config:NgbCarouselConfig) {
+  constructor(private http:HttpClient, private router:Router, config:NgbCarouselConfig, public breatheService: BreatheService) {
     config.keyboard = false;
 
     if(location.host == 'localhost:4200') {
-      this.production = true;
-    } else {
       this.production = false;
     }
+
   }
 
   ngOnInit() {
+    var that = this;
+
+    // If we are in production, see if we can get our information from the session.
     if(this.production) {
-      this.http.get(api_url + 'me').subscribe(res => {
+      this.http.get(that.breatheService.fullPath('/api/users/me/')).subscribe(res => {
+        console.log('we here???');
         this.router.navigateByUrl('/main');
       }, err => {
         // Do nothing and let them log in.
@@ -52,6 +56,11 @@ export class LandingPageComponent implements OnInit {
       }
     }
 
+  }
+
+  googleLogin() {
+    var url = location.origin + '/google/oauth2/?device=browser';
+    location.href = url;
   }
 
   login(username:string, password:string){
