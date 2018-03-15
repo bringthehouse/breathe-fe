@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
+import { BreatheService } from '../../services/breathe/breathe.service';
 
 class User{
   email:string;
@@ -40,7 +41,7 @@ export class PostRegisterComponent implements OnInit {
   user_tok:string;
   email:string;
 
-  constructor(private http:HttpClient, private router:Router) { }
+  constructor(private http:HttpClient, private router:Router, public breatheService: BreatheService) { }
 
   ngOnInit() {
     this.user_tok = sessionStorage.getItem('user');
@@ -76,7 +77,8 @@ export class PostRegisterComponent implements OnInit {
     };
 
     this.http.put(
-      api_url + "api/users/update/",
+      // api_url + "api/users/update/",
+      this.breatheService.fullPath('/api/users/update/'),
       userObject,
       {headers: this.headers}
     ).subscribe(

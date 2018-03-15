@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BreatheService } from '../../services/breathe/breathe.service';
 
 const api_url:string = "http://localhost:8000/";
 
@@ -23,7 +24,7 @@ export class RegisterComponent implements OnInit {
   show_exists_err:boolean = false;
   username:string;
 
-  constructor(private http:HttpClient, private router:Router) { }
+  constructor(private http:HttpClient, private router:Router, public breatheService: BreatheService) { }
 
   ngOnInit() {
 
@@ -51,7 +52,8 @@ export class RegisterComponent implements OnInit {
       return;
     }
     this.http.post(
-      api_url + "rest-auth/registration/",
+      // api_url + "rest-auth/registration/",
+      this.breatheService.fullPath('/rest-auth/registration/'),
       {"username": username, "password1":password, "password2":password_check}
     ).subscribe(
       results => {

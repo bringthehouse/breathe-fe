@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BreatheService } from './breathe/breathe.service';
 
 const api_url:string = "http://localhost:8000/";
 
@@ -16,7 +17,7 @@ export class UserService {
   headers:HttpHeaders = null;
 
   
-  constructor(private http:HttpClient, private router:Router) {
+  constructor(private http:HttpClient, private router:Router, public breatheService: BreatheService) {
     this.user_tok = localStorage.getItem('user');
     if (this.user_tok == null){
       this.user_tok = sessionStorage.getItem('user');
@@ -31,6 +32,7 @@ export class UserService {
 
   /* Logout method *////////////////////////////////////
   logout(){
+    // @sam - not needed!?
     this.http.post(api_url + "rest-auth/logout/", {headers: this.headers}).subscribe(
       response => {
         // Remove locally stored information
@@ -43,23 +45,35 @@ export class UserService {
     )
   }
 
+  sessionLogout() {
+    const that = this;
+
+    localStorage.clear();
+    sessionStorage.clear();
+
+    return this.http.post(that.breatheService.fullPath('/session-res-auth/logout/'), {});
+  }
+
   /* Profile-related methods */////////////////////////////
   getFood(){
     return this.http.get(
-      api_url + "api/foods/",
+      // api_url + "api/foods/",
+      this.breatheService.fullPath('/api/foods/'),
       {headers: this.headers});
   }
 
   getWeights(){
     return this.http.get(
-      api_url + "api/weights/",
+      // api_url + "api/weights/",
+      this.breatheService.fullPath('/api/weights/'),
       {headers: this.headers}
     );
   }
 
   addWeight(weight:number, time:string){
     return this.http.post(
-      api_url + "api/weights/",
+      // api_url + "api/weights/",
+      this.breatheService.fullPath('/api/weights/'),
       {"email":this.user.email,"value":weight, "timestamp":time},
       {headers: this.headers}
     );
@@ -67,7 +81,8 @@ export class UserService {
 
   getUser(){
     return this.http.get(
-      api_url + "api/users/retrieve/",
+      // api_url + "api/users/retrieve/",
+      this.breatheService.fullPath('/api/users/retrieve/'),
       {headers: this.headers}
     );
   }
@@ -85,7 +100,8 @@ export class UserService {
     };
 
     return this.http.put(
-      api_url + "api/users/update/",
+      // api_url + "api/users/update/",
+      this.breatheService.fullPath('/api/users/update/'),
       userObject,
       {headers: this.headers}
     );
@@ -93,7 +109,8 @@ export class UserService {
 
   getResults(){
     return this.http.get(
-      api_url + "api/results/retrieve/",
+      // api_url + "api/results/retrieve/",
+      this.breatheService.fullPath('/api/results/retrieve/'),
       {headers: this.headers}
     );    
   }
@@ -101,7 +118,8 @@ export class UserService {
   /* Non-profile-related methods *////////////////////////////
   getUPC(upc:string){
     return this.http.post(
-      api_url + "api/nutritionix/upc/",
+      // api_url + "api/nutritionix/upc/",
+      this.breatheService.fullPath('/api/nutritionix/upc/'),
       {upc: upc},
       {headers: this.headers}
     );
@@ -109,7 +127,8 @@ export class UserService {
 
   search(query_string:string){
     return this.http.post(
-      api_url + "api/nutritionix/search/",
+      // api_url + "api/nutritionix/search/",
+      this.breatheService.fullPath('/api/nutritionix/search/'),
       {query: query_string},
       {headers: this.headers}
     );
@@ -117,7 +136,8 @@ export class UserService {
 
   getDetails(item_id:string){
     return this.http.post(
-      api_url + "api/nutritionix/item/?nix_item_id=" + item_id,
+      // api_url + "api/nutritionix/item/?nix_item_id=" + item_id,
+      this.breatheService.fullPath('api/nutritionix/item/?nix_item_id=' + item_id),
       {nix_item_id: item_id},
       {headers: this.headers}
     );
@@ -125,7 +145,8 @@ export class UserService {
 
   getCommon(query:string){
     return this.http.post(
-      api_url + "api/nutritionix/common/",
+      // api_url + "api/nutritionix/common/",
+      this.breatheService.fullPath('/api/nutritionix/common/'),
       {query: query},
       {headers: this.headers}
     );
@@ -133,7 +154,8 @@ export class UserService {
 
   postFood(food:Food, timestamp:string){
     return this.http.post(
-      api_url + "api/foods/",
+      // api_url + "api/foods/",
+      this.breatheService.fullPath('/api/foods/'),
       {
         nix_item_id: food.nix_item_id,
         food_name: food.food_name,

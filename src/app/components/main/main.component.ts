@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -8,13 +9,21 @@ import { UserService } from '../../services/user.service';
 })
 export class MainComponent implements OnInit {
 
-  constructor(private userService:UserService) { }
+  constructor(private userService:UserService, private router: Router) { }
 
   ngOnInit() {
   }
 
   logout(){
     this.userService.logout();
+  }
+
+  sessionLogout() {
+    const that = this;
+
+    this.userService.sessionLogout().subscribe(res => {
+      that.router.navigateByUrl('/welcome');
+    });
   }
 
 }
