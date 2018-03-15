@@ -16,6 +16,7 @@ const api_url:string = "http://localhost:8000/";
 
 export class LandingPageComponent implements OnInit {
 
+  production = true;
   persist_credentials:boolean = false;
   headers:HttpHeaders = new HttpHeaders({
     "Content-Type": "application/json"
@@ -24,17 +25,31 @@ export class LandingPageComponent implements OnInit {
 
   constructor(private http:HttpClient, private router:Router, config:NgbCarouselConfig) {
     config.keyboard = false;
+
+    if(location.host == 'localhost:4200') {
+      this.production = true;
+    } else {
+      this.production = false;
+    }
   }
 
   ngOnInit() {
-    // Check if user is already logged in
-    let user = localStorage.getItem('user');
-    if (user == null){
-      user = sessionStorage.getItem('user');
-    }
-
-    if (user != null){
+    if(this.production) {
+      this.http.get(api_url + 'me').subscribe(res => {
         this.router.navigateByUrl('/main');
+      }, err => {
+        // Do nothing and let them log in.
+      });
+    } else {
+      // Check if user is already logged in
+      let user = localStorage.getItem('user');
+      if (user == null){
+        user = sessionStorage.getItem('user');
+      }
+
+      if (user != null){
+          this.router.navigateByUrl('/main');
+      }
     }
 
   }
