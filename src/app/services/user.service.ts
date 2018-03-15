@@ -51,7 +51,7 @@ export class UserService {
     localStorage.clear();
     sessionStorage.clear();
 
-    return this.http.post(that.breatheService.fullPath('/session-res-auth/logout/'), {});
+    return this.http.post(that.breatheService.fullPath('/session-rest-auth/logout/'), {});
   }
 
   /* Profile-related methods */////////////////////////////
