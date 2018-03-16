@@ -12,21 +12,23 @@ const api_url:string = "http://localhost:8000/";
 @Injectable()
 export class UserService {
 
-  user:User = new User();
-  user_tok:string = null;
-  headers:HttpHeaders = null;
+  user: User = new User();
+  user_tok: string = null;
+  headers: HttpHeaders = null;
 
-  
-  constructor(private http:HttpClient, private router:Router, public breatheService: BreatheService) {
+  constructor(private http: HttpClient, private router: Router, public breatheService: BreatheService) {
+    this.headers = this.breatheService.getHeaders();
+
     this.user_tok = localStorage.getItem('user');
-    if (this.user_tok == null){
+    if (this.user_tok == null) {
       this.user_tok = sessionStorage.getItem('user');
     }
-    if (this.user_tok == null){
+
+    if (this.user_tok == null) {
       this.router.navigateByUrl('/welcome');
-    }else{
+    } else {
       // Set token header
-      this.headers = new HttpHeaders({"content-type": "application/json", "Authorization": "Token " + this.user_tok});
+      // this.headers = new HttpHeaders({"content-type": "application/json", "Authorization": "Token " + this.user_tok});
     }
   }
 
@@ -51,7 +53,7 @@ export class UserService {
     localStorage.clear();
     sessionStorage.clear();
 
-    return this.http.post(that.breatheService.fullPath('/session-rest-auth/logout/'), {});
+    return this.http.post(that.breatheService.fullPath('/session-rest-auth/logout/'), {}, {headers: this.headers});
   }
 
   /* Profile-related methods */////////////////////////////

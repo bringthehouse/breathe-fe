@@ -44,12 +44,14 @@ export class PostRegisterComponent implements OnInit {
   constructor(private http:HttpClient, private router:Router, public breatheService: BreatheService) { }
 
   ngOnInit() {
+    this.headers = this.breatheService.getHeaders();
+    
     this.user_tok = sessionStorage.getItem('user');
     this.email = sessionStorage.getItem('email');
     if (this.user_tok == null){
       this.router.navigateByUrl("/welcome");
     }
-    this.headers = new HttpHeaders({"content-type": "application/json", "Authorization": "Token " + this.user_tok});
+    // this.headers = new HttpHeaders({"content-type": "application/json", "Authorization": "Token " + this.user_tok});
   }
 
   setUser(){
